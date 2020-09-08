@@ -1,0 +1,69 @@
+.ant-menu-item{
+  a{
+    color: unset;
+  }
+}
+.ant-menu-item-selected{
+  a{
+    color:#65cfae;
+  }
+}
+.ant-menu-inline .ant-menu-selected::before, .ant-menu-inline .ant-menu-item-selected::before{
+  content: '';
+  transform: scaleY(1);
+  opacity: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-left: 3px solid #21cfae;
+}
+.ant-menu-inline .ant-menu-selected::after, .ant-menu-inline .ant-menu-item-selected::after{
+  opacity: 0;
+}
+.admin-header{
+  background: url('../../static/images/daohangtiao.png') no-repeat;
+  padding: 0;
+  background-size: cover;
+  color: #fff;
+}
+.ant-layout-sider-trigger{
+  background: #fff;
+  color: #65cfae;
+}
+.ant-table-thead > tr > th{
+  border-top: 2px solid #6adbc7;
+  background: #f2fefc!important;
+  color: #6adbc7!important;
+  font-weight: bold!important;
+}
+.ant-table-pagination.ant-pagination{
+  text-align: center;
+  float: unset!important;
+}
+.ant-pagination-item-active a{
+  color: #fff!important;
+  background: #21cfae;
+}
+.goBack{
+  background: url('../../static/images/fanhui@2x.png') left center no-repeat;
+  padding-left: 23px;
+  width: 100px;
+  cursor: pointer;
+}
+@font-face {
+  font-family: 'iconfont';
+  src: url('../../static/font/iconfont.eot');
+  src: url('../../static/font/iconfont.eot?#iefix') format('embedded-opentype'),
+      url('../../static/font/iconfont.woff2') format('woff2'),
+      url('../../static/font/iconfont.woff') format('woff'),
+      url('../../static/font/iconfont.ttf') format('truetype'),
+      url('../../static/font/iconfont.svg#iconfont') format('svg');
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

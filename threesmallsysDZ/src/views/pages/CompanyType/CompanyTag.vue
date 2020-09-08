@@ -1,0 +1,189 @@
+<template>
+  <el-container class="shopList">
+    <el-header class="box add bb">
+        <h5 class="mb10"><span class="lines"></span>主体类型列表</h5>
+         <div><el-button   class=""  icon="el-icon-plus" size="small" type="primary" @click="add">新增主体类型</el-button>
+              <el-button  class="back_btn" size="small" plain @click="$router.back()">返回</el-button></div>
+    </el-header>
+    <el-main class="p15 pt0">
+    <el-row class="box search mt20">
+       <el-form :inline="true" :model="page" class="demo-form-inline">
+        
+       
+        <el-col :span="4" class="mr10">
+             <el-form-item size="small" >
+         <el-input placeholder="主体类型名称" clearable v-model="page.companytag_name" class="input-with-select">
+            </el-input>
+        </el-form-item>
+        </el-col>
+         <el-col :span="4" class="mr10">
+            <el-form-item size="small">
+              <el-select v-model="page.state" clearable placeholder="全部" @change="change(page.state)">
+                <el-option
+                  v-for="(item,index) in statusOptions"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+         <el-col :span="2" class="tl mr10">
+           <el-form-item  size="small">
+          <el-button  type="primary"  @click="onSubmit" class="general_bgc general_border cfff">查询</el-button>
+        </el-form-item>
+        </el-col>
+      </el-form>
+    </el-row>
+    <div class="box list">
+       <el-table border :data="tableData" style="width: 100%">
+        <el-table-column type="index" align='center' width="60"  label="序号"></el-table-column>
+        
+         <el-table-column prop="companytag_name" min-width="120" :show-overflow-tooltip="true"  label="主体类型名称" align='center'></el-table-column>
+         <el-table-column align="center" label="状态">
+            <template slot-scope="scope">
+              <el-tag
+                :type="scope.row.state | tagFilter"
+              >{{scope.row.state | statusFilter}}</el-tag>
+            </template>
+          </el-table-column>
+        <el-table-column prop="add_time"  min-width="120" :show-overflow-tooltip="true" label="添加时间"  align='center'></el-table-column>
+         <el-table-column prop="update_time"  min-width="120" :show-overflow-tooltip="true"  label="更新时间" align='center' ></el-table-column>
+        <el-table-column label="操作" width="180" fixed="right"  align='center'>
+          <template slot-scope="scope">
+           <el-button type="text" class="orange" size="small" @click="godetail(scope.row.companytag_code)">编辑</el-button>
+            <el-button
+                type="text"
+                class="disib"
+                :class="{'red':scope.row.state==1}"
+                size="mini"
+                @click="changeState(scope.row)"
+              >{{scope.row.state | antiStateFilter}}</el-button>
+         </template>
+        </el-table-column>
+      </el-table>
+      <div class="i-page fr disib mt20">
+        <el-pagination
+          background
+          :page-size='10'
+          layout="total,prev, pager, next"
+          :total="total"
+          :current-page="currentPage"
+           @current-change = 'currentChange'>
+        </el-pagination>
+      </div>
+    </div> 
+     </el-main>
+  </el-container>
+</template>
+<script>
+import axios from '../../../util/api'
+import { mapState } from 'vuex'
+export default {
+  data () {
+    return {
+      page: {
+        pager_offset: '0',
+        pager_openset:'10',
+       companytype_code:'',
+       companytag_name:'',
+       state:''
+      },
+       statusOptions: [
+        { label: "全部", value: "" },
+        { label: "启用", value: "1" },
+        { label: "禁用", value: "2" }
+      ],
+     currentPage: 1,
+      total: 0,
+      tableData:[],
+    }
+  },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        1: "已启用",
+        2: "已禁用"
+      };
+      return statusMap[status];
+    },
+    tagFilter(status) {
+      const statusMap = {
+        1: "success",
+        2: "warning"
+      };
+      return statusMap[status];
+    },
+    antiStateFilter(state) {
+      const stateMap = {
+        1: "禁用",
+        2: "启用"
+      };
+      return stateMap[state];
+    }
+  },
+   created () {
+      this.page.companytype_code=this.$route.query.id;
+    this.currentPage = this.page.pager_offset / 10 + 1
+    this.init(this.page)
+  },
+  methods: {
+           init (params) {
+      axios.get('/api/companytag/list', params).then((v) => {
+        this.tableData=v.company_tag_list;
+         this.total = v.pager_count
+      })
+    },
+     change(val) {
+      this.page.state=val
+      this.onSubmit();
+    },
+     // 搜索
+     onSubmit () { 
+      this.currentPage = 1
+      this.page.pager_offset = '0'
+      this.init(this.page)
+    },
+    // 分页
+    currentChange(page){
+      this.currentPage = page;
+      this.page.pager_offset = String((page - 1) * 10)
+      this.init(this.page)
+    },
+    add(){
+       this.$router.push({
+        name: "CompanyTagAdd", query: {id: this.$route.query.id}
+      });
+    },
+   godetail(index){
+    this.$router.push({
+        name: "CompanyTagAdd",
+        query: {
+          id: this.$route.query.id,
+          id1: index
+        }
+      });
+  },
+     changeState(row) {
+      let { companytag_code, state } = row;
+      state = state == 1 ? 2 : 1;
+      axios.put("/api/companytag/state/update", { companytag_code, state }).then(response => {
+          this.init(this.page);
+        });
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.shopList{
+  overflow-x: hidden;
+  .add{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+ /deep/ .el-input-group__append .el-button--primary .el-icon-search{color: #fff}
+}
+
+</style>

@@ -1,0 +1,33 @@
+{
+  "sku":{
+    "tree":[{
+    "k": "规格",
+    "k_s":"s1",
+    "v": [{
+      "id": 68,
+      "name": "2.0-2.4斤/只"
+     },{
+      "id": 69,
+      "name": "21斤/只"
+     }
+    ]
+   },{
+    "k": "颜色",
+    "k_s":"s2",
+    "v": [{
+      "id": 6,
+      "name": "red"
+     }
+    ]
+   }
+  ],
+  "list": [
+    {"id":23,"stock_num":2,"price":22.00,"s1":68,"s2":6},
+    {"id":24,"stock_num":12,"price":288.00,"s1":69,"s2":6}]
+  },
+  "goods_id": "946755", 
+  "goods_info": {
+     "title": "测试商品A",
+     "picture":"https://img.yzcdn.cn/upload_files/2017/03/16/Fs_OMbSFPa183sBwvG_94llUYiLa.jpeg?imageView2/2/w/100/h/100/q/75/format/jpg"
+  }
+}
